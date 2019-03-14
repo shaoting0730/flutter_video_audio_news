@@ -1,8 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyrefresh/easy_refresh.dart';  // 上下拉
-import 'package:flutter_easyrefresh/bezier_circle_header.dart';  // 上下拉 头
-import 'package:flutter_easyrefresh/bezier_bounce_footer.dart';  // 上下拉 尾
+import 'dart:convert';
+import '../model/video_context_model.dart'; // 模型
+import '../service/service_method.dart'; // 网络请求
+import 'package:flutter_easyrefresh/easy_refresh.dart'; // 上下拉
+import 'package:flutter_easyrefresh/bezier_circle_header.dart'; // 上下拉 头
+import 'package:flutter_easyrefresh/bezier_bounce_footer.dart'; // 上下拉 尾
 import '../pages/widgets/drawer_widget.dart'; // 侧边栏
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart'; // 瀑布流
 
@@ -34,6 +37,24 @@ class _MainVideoState extends State<MainVideo> {
       new GlobalKey<RefreshHeaderState>();
   GlobalKey<RefreshFooterState> _footerKey =
       new GlobalKey<RefreshFooterState>();
+  int page = 1; // 第一个数据标示
+  List results = []; // 数据数组
+  void initState() {
+    super.initState();
+    _getVideoData();
+  }
+
+  // 获取视频一级数据 
+  void _getVideoData() async {
+    await get('videoContent', formData: page).then((val) {
+      var data = json.decode(val.toString());
+      VideoContextModel model = VideoContextModel.fromJson(data);
+      setState(() {
+        results.addAll(model.results);
+        page++;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,45 +75,40 @@ class _MainVideoState extends State<MainVideo> {
           color: Theme.of(context).scaffoldBackgroundColor,
         ),
         child: _waterFall(),
-        onRefresh: () async {
-          await new Future.delayed(const Duration(seconds: 2), () {
-            setState(() {
-              str.clear();
-              str.addAll(addStr);
-            });
+        onRefresh: ()  {
+          setState(() {
+           results = [];
           });
+           page = 1;
+           _getVideoData();
         },
-        loadMore: () async {
-          await new Future.delayed(const Duration(seconds: 1), () {
-            if (str.length < 20) {
-              setState(() {
-                str.addAll(addStr);
-              });
-            }
-          });
+        loadMore: () {
+          _getVideoData();
         },
-       ),
+      ),
     );
   }
 
   // 瀑布流
-  Widget _waterFall(){
+  Widget _waterFall() {
     return StaggeredGridView.countBuilder(
-          crossAxisCount: 4,
-          itemCount: 8,
-          itemBuilder: (BuildContext context, int index) => new Container(
-              color: Colors.green,
-              child: new Center(
-                child: new CircleAvatar(
-                  backgroundColor: Colors.white,
-                  child: new Text('$index'),
-                ),
-              )),
-          staggeredTileBuilder: (int index) =>
-              new StaggeredTile.count(2, index.isEven ? 2 : 1),
-          mainAxisSpacing: 4.0,
-          crossAxisSpacing: 4.0,
-     );
+      crossAxisCount: 4,
+      itemCount: results.length,
+      itemBuilder: (BuildContext context, int index) =>  Container(
+          child: InkWell(
+            onTap:(){},
+            child: Column(
+              children: <Widget>[
+                 Image.network(results[index].url,fit: BoxFit.cover),
+                 Text(results[index].type+'--'+results[index].desc)
+              ],
+            ),
+          ),
+      ),
+      staggeredTileBuilder: (int index) =>
+           StaggeredTile.count(2, index.isEven ? 3 : 4),
+      mainAxisSpacing: 4.0,
+      crossAxisSpacing: 4.0,
+    );
   }
 }
-
