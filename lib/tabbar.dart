@@ -6,8 +6,9 @@ import './pages/video_page.dart';
 class Tabbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return new MaterialApp(
-        debugShowCheckedModeBanner: false, home: new MainPageWidget());
+    return Scaffold(
+      body: MainPageWidget(),
+    );
   }
 }
 
@@ -43,7 +44,7 @@ class MainPageState extends State<MainPageWidget> {
   Text getTabTitle(int curIndex) {
     if (curIndex == _tabIndex) {
       return new Text(appBarTitles[curIndex],
-          style: new TextStyle(fontSize: 14.0, color: const Color(0xff1296db)));
+          style: new TextStyle(fontSize: 14.0, color: Colors.pink));
     } else {
       return new Text(appBarTitles[curIndex],
           style: new TextStyle(fontSize: 14.0, color: const Color(0xff515151)));
