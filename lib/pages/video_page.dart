@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';  // 上下拉
+import 'package:flutter_easyrefresh/bezier_circle_header.dart';  // 上下拉 头
+import 'package:flutter_easyrefresh/bezier_bounce_footer.dart';  // 上下拉 尾
 import '../pages/widgets/drawer_widget.dart'; // 侧边栏
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart'; // 瀑布流
-import 'package:flutter_easyrefresh/easy_refresh.dart'; //  上下拉
 
 class VideoPage extends StatelessWidget {
   @override
@@ -23,6 +26,12 @@ class MainVideo extends StatefulWidget {
 }
 
 class _MainVideoState extends State<MainVideo> {
+  List<String> addStr = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
+  List<String> str = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
+  GlobalKey<EasyRefreshState> _easyRefreshKey =
+      new GlobalKey<EasyRefreshState>();
+  GlobalKey<RefreshHeaderState> _headerKey =
+      new GlobalKey<RefreshHeaderState>();
   GlobalKey<RefreshFooterState> _footerKey =
       new GlobalKey<RefreshFooterState>();
 
@@ -34,20 +43,35 @@ class _MainVideoState extends State<MainVideo> {
               style: TextStyle(fontFamily: 'customFont', fontSize: 30)),
           centerTitle: true),
       drawer: drawerWidget(context), // 侧边栏
-      body: EasyRefresh(   // 上下拉刷新
-        refreshFooter: ClassicsFooter(
+      body: EasyRefresh(
+        key: _easyRefreshKey,
+        refreshHeader: BezierCircleHeader(
+          key: _headerKey,
+          color: Theme.of(context).scaffoldBackgroundColor,
+        ),
+        refreshFooter: BezierBounceFooter(
           key: _footerKey,
-          bgColor: Colors.white,
-          textColor: Colors.pink,
-          moreInfoColor: Colors.pink,
-          showMore: true,
-          noMoreText: '',
-          moreInfo: '加载中...',
-          loadReadyText: '上拉加载😝',
+          color: Theme.of(context).scaffoldBackgroundColor,
         ),
         child: _waterFall(),
-        loadMore: () async {},
-      ),
+        onRefresh: () async {
+          await new Future.delayed(const Duration(seconds: 2), () {
+            setState(() {
+              str.clear();
+              str.addAll(addStr);
+            });
+          });
+        },
+        loadMore: () async {
+          await new Future.delayed(const Duration(seconds: 1), () {
+            if (str.length < 20) {
+              setState(() {
+                str.addAll(addStr);
+              });
+            }
+          });
+        },
+       ),
     );
   }
 
@@ -70,7 +94,5 @@ class _MainVideoState extends State<MainVideo> {
           crossAxisSpacing: 4.0,
      );
   }
-
 }
-
 
