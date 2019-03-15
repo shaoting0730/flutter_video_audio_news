@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
-import './top_screen.dart.dart';
+import './top_screen.dart';
 
 
 void main() {
