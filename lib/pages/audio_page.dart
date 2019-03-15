@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../bloc/counter_bloc.dart';
 
 class AudioPage extends StatelessWidget {
   @override
@@ -22,6 +24,7 @@ class MainAudio extends StatefulWidget {
 class _MainAudioState extends State<MainAudio> {
   @override
   Widget build(BuildContext context) {
+    final CounterBloc _counterBloc = BlocProvider.of<CounterBloc>(context);
     return Scaffold(
       appBar: PreferredSize(
         child: Container(
@@ -43,9 +46,39 @@ class _MainAudioState extends State<MainAudio> {
         ),
         preferredSize: Size(MediaQuery.of(context).size.width, 45),
       ),
-      body: Column(
+      body:  BlocBuilder<CounterEvent, int>(
+        bloc: _counterBloc,
+        builder: (BuildContext context, int count) {
+          return Center(
+            child: Text(
+              '$count',
+              style: TextStyle(fontSize: 24.0),
+            ),
+          );
+        },
+      ),
+      floatingActionButton: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          Text('Flutter 程序猿 👨‍💻‍'),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 5.0),
+            child: FloatingActionButton(
+              child: Icon(Icons.add),
+              onPressed: () {
+                _counterBloc.dispatch(CounterEvent.increment);
+              },
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 5.0),
+            child: FloatingActionButton(
+              child: Icon(Icons.remove),
+              onPressed: () {
+                _counterBloc.dispatch(CounterEvent.decrement);
+              },
+            ),
+          ),
         ],
       ),
     );

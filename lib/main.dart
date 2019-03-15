@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'tabbar.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
+import './top_screen.dart.dart';
+
 
 void main() {
   runApp(MyApp());
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter 实战练习',
       debugShowCheckedModeBanner: false, // 去除debug旗标
-      home: Tabbar(),
+      home: TopScreen(),
     );
   }
 }
