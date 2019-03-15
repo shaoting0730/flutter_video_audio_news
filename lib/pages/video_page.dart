@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import '../model/video_context_model.dart'; // 模型
@@ -64,7 +63,8 @@ class _MainVideoState extends State<MainVideo> {
               style: TextStyle(fontFamily: 'customFont', fontSize: 30)),
           centerTitle: true),
       drawer: drawerWidget(context), // 侧边栏
-      body: EasyRefresh(
+      body: results.length > 0 ? 
+       EasyRefresh(
         key: _easyRefreshKey,
         refreshHeader: BezierCircleHeader(
           key: _headerKey,
@@ -74,7 +74,7 @@ class _MainVideoState extends State<MainVideo> {
           key: _footerKey,
           color: Theme.of(context).scaffoldBackgroundColor,
         ),
-        child: _waterFall(),
+        child: results.length > 0 ? _waterFall() : _noData(),
         onRefresh: ()  {
           setState(() {
            results = [];
@@ -85,6 +85,23 @@ class _MainVideoState extends State<MainVideo> {
         loadMore: () {
           _getVideoData();
         },
+      )
+       : _noData()
+    );
+  }
+
+ // 没有数据时展示
+  Widget _noData() {
+    return Center( 
+      child: InkWell(
+         onTap: (){
+            setState(() {
+           results = [];
+          });
+           page = 1;
+           _getVideoData();
+         },
+         child: Text('点我重新加载一下数据'),
       ),
     );
   }
@@ -98,9 +115,15 @@ class _MainVideoState extends State<MainVideo> {
           child: InkWell(
             onTap:(){},
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                 Image.network(results[index].url,fit: BoxFit.cover),
-                 Text(results[index].type+'--'+results[index].desc)
+                 Expanded(child: FadeInImage.assetNetwork(
+                   placeholder: 'images/pages/placeholder.jpg',
+                   fit: BoxFit.fill,
+                   image: results[index].url,
+                   ), 
+                 ),
+                 Text('点我看美女🛀'+'--'+results[index].desc),
               ],
             ),
           ),
