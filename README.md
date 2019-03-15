@@ -36,14 +36,14 @@
 >    - |-- tabbar.dart  (Tabbar) 
 >    - |-- top_screen.dart  (把tabbar和state管理分开) 
 
-感谢:
+### 感谢: 
 接口来自   [http://gank.io/api]( http://gank.io/api )  <br/>
 
 
 ## 项目截图
-### 音频
-![image](https://github.com/pheromone/flutter_video_audio_news/blob/master/video.png) <br/>
 ### 视频
+![image](https://github.com/pheromone/flutter_video_audio_news/blob/master/video.png) <br/>
+### 音频
 ...
 ### 新闻
 ...
