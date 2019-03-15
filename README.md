@@ -42,8 +42,7 @@
 
 ## 项目截图
 ### 音频
-![image](https://github.com/pheromone/flutter_shop/blob/master/homePage1.png) <br/>
-![image](https://github.com/pheromone/flutter_shop/blob/master/homepag2.png) <br/>
+![image](https://github.com/pheromone/flutter_video_audio_news/blob/master/video.png) <br/>
 ### 视频
 ...
 ### 新闻
