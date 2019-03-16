@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import './top_screen.dart';
 
-
 void main() {
   runApp(MyApp());
   if (Platform.isAndroid) {
