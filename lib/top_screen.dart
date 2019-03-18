@@ -13,13 +13,9 @@ class _TopScreenState extends State<TopScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false, // 去除debug旗标
-      home: BlocProvider<CounterBloc>(
+    return BlocProvider<CounterBloc>(
         bloc: _counterBloc,
         child: Tabbar(),
-      ),
-    );
+      );
   }
 }

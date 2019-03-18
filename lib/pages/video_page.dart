@@ -7,19 +7,29 @@ import 'package:flutter_easyrefresh/bezier_circle_header.dart'; // 上下拉 头
 import 'package:flutter_easyrefresh/bezier_bounce_footer.dart'; // 上下拉 尾
 import '../pages/widgets/drawer_widget.dart'; // 侧边栏
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart'; // 瀑布流
-import './details/video_detail.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';  // UI适配库
+import './details/video_detail.dart';   // 视频详情
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // UI适配库
+import 'package:flutter_bloc/flutter_bloc.dart';   // bloc
+import '../bloc/counter_bloc.dart';  // bloc
 
 class VideoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-          title: Text('视频',
-              style: TextStyle(fontFamily: 'customFont', fontSize: ScreenUtil().setSp(60))),
-          centerTitle: true),
-      drawer: drawerWidget(context),
-      body: MainVideo(),
+    final CounterBloc _counterBloc = BlocProvider.of<CounterBloc>(context);
+    return BlocBuilder(
+      bloc: _counterBloc,
+      builder: (BuildContext context, Map theme) {
+        return Scaffold(
+          appBar: AppBar(
+              title: Text('视频',
+                  style: TextStyle(
+                      fontFamily: '${theme['fontFamily']}',
+                      fontSize: ScreenUtil().setSp(60))),
+              centerTitle: true),
+          drawer: drawerWidget(context),
+          body: MainVideo(),
+        );
+      },
     );
   }
 }
@@ -95,7 +105,7 @@ class _MainVideoState extends State<MainVideo> {
           _getVideoData();
         },
         child: Column(
-           mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text('空空无也,点我重新加载^_^'),
             Image.asset('images/pages/noData.jpeg')
@@ -116,7 +126,10 @@ class _MainVideoState extends State<MainVideo> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => new VideoDetails(picUrl: results[index].url,date: results[index].desc,),
+                      builder: (context) => new VideoDetails(
+                            picUrl: results[index].url,
+                            date: results[index].desc,
+                          ),
                     ));
               },
               child: Column(

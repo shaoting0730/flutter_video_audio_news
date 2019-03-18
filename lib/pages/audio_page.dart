@@ -46,40 +46,13 @@ class _MainAudioState extends State<MainAudio> {
         ),
         preferredSize: Size(MediaQuery.of(context).size.width, 45),
       ),
-      body:  BlocBuilder<CounterEvent, int>(
+      body: BlocBuilder<CounterEvent, Map>(
         bloc: _counterBloc,
-        builder: (BuildContext context, int count) {
+        builder: (BuildContext context, Map theme){
           return Center(
-            child: Text(
-              '$count',
-              style: TextStyle(fontSize: 24.0),
-            ),
+             child: Text('$theme'), 
           );
         },
-      ),
-      floatingActionButton: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 5.0),
-            child: FloatingActionButton(
-              child: Icon(Icons.add),
-              onPressed: () {
-                _counterBloc.dispatch(CounterEvent.increment);
-              },
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 5.0),
-            child: FloatingActionButton(
-              child: Icon(Icons.remove),
-              onPressed: () {
-                _counterBloc.dispatch(CounterEvent.decrement);
-              },
-            ),
-          ),
-        ],
       ),
     );
   }

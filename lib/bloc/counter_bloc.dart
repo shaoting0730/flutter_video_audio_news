@@ -1,18 +1,27 @@
 import 'package:bloc/bloc.dart';
-enum CounterEvent { increment, decrement }
+import 'package:flutter/material.dart';
 
-class CounterBloc extends Bloc<CounterEvent, int> {
+enum CounterEvent { changeTheme }
+
+class CounterBloc extends Bloc<CounterEvent, Map> {
   @override
-  int get initialState => 0;
+  Map get initialState => {'color': Colors.pink, 'fontFamily': 'customFont'};
 
   @override
-  Stream<int> mapEventToState(int currentState, CounterEvent event) async* {
+  Stream<Map> mapEventToState(Map initialState, CounterEvent event) async* {
     switch (event) {
-      case CounterEvent.decrement:
-        yield currentState - 1;
-        break;
-      case CounterEvent.increment:
-        yield currentState + 1;
+      case CounterEvent.changeTheme:
+        print('++++++++++++++____________++++++++');
+
+        if (initialState['fontFamily'] == 'customFont') {
+          yield initialState = {'color': Colors.blueAccent, 'fontFamily': ''};
+        } else {
+          yield initialState = {
+            'color': Colors.pink,
+            'fontFamily': 'customFont'
+          };
+        }
+
         break;
     }
   }
