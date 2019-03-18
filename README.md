@@ -51,6 +51,8 @@
 ## 项目截图
 ### 视频
 ![image](https://github.com/pheromone/flutter_video_audio_news/blob/master/video.png) <br/>
+![image](https://github.com/pheromone/flutter_video_audio_news/blob/master/%E4%BE%A7%E8%BE%B9%E6%A0%8F.png) <br/>
+
 ### 音频
 ...
 ### 新闻
