@@ -15,6 +15,10 @@
  [打电话: url_launcher]( https://github.com/flutter/plugins )  <br/>
  [下拉刷新&上拉加载: flutter_easyrefresh]( https://github.com/xuelongqy/flutter_easyrefresh )  <br/>
  [瀑布流: flutter_staggered_grid_view]( https://github.com/letsar/flutter_staggered_grid_view )  <br/>
+ [视频播放: chewie]( https://github.com/brianegan/chewie )  <br/>
+ [轮播: flutter_swiper]( https://github.com/best-flutter/flutter_swiper )  <br/>
+
+
  
  ### 代码结构
 >- |--lib
@@ -25,6 +29,10 @@
 >    - |-- model 
 >      - |-- video_context_model.dart (视频1级model)
 >    - |-- pages (页面)
+>      - |-- details  (详情界面)
+>        - |-- comment_details.dart (评论)
+>        - |-- video_details.dart (视频)
+>        - |-- video_info.dart (视频简介)
 >      - |-- widget  (小部件)
 >        - |-- drawer_widget.dart (侧边栏)
 >      - |-- audio_page.dart  (音频)
