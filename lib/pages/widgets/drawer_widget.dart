@@ -6,6 +6,7 @@ Drawer drawerWidget(context) {
         child: Column(
           children: <Widget>[
             Image.network('https://ws1.sinaimg.cn/large/0065oQSqly1g0ajj4h6ndj30sg11xdmj.jpg'),
+            
             ListTile(   //退出按钮
               title: new Text('Close'),
               trailing: new Icon(Icons.cancel),

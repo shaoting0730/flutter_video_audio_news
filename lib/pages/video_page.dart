@@ -8,6 +8,7 @@ import 'package:flutter_easyrefresh/bezier_bounce_footer.dart'; // 上下拉 尾
 import '../pages/widgets/drawer_widget.dart'; // 侧边栏
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart'; // 瀑布流
 import './details/video_detail.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';  // UI适配库
 
 class VideoPage extends StatelessWidget {
   @override
@@ -15,7 +16,7 @@ class VideoPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
           title: Text('视频',
-              style: TextStyle(fontFamily: 'customFont', fontSize: 30)),
+              style: TextStyle(fontFamily: 'customFont', fontSize: ScreenUtil().setSp(60))),
           centerTitle: true),
       drawer: drawerWidget(context),
       body: MainVideo(),
@@ -29,8 +30,6 @@ class MainVideo extends StatefulWidget {
 }
 
 class _MainVideoState extends State<MainVideo> {
-  List<String> addStr = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
-  List<String> str = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
   GlobalKey<EasyRefreshState> _easyRefreshKey =
       new GlobalKey<EasyRefreshState>();
   GlobalKey<RefreshHeaderState> _headerKey =
@@ -95,7 +94,13 @@ class _MainVideoState extends State<MainVideo> {
           page = 1;
           _getVideoData();
         },
-        child: Text('点我重新加载一下数据'),
+        child: Column(
+           mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text('空空无也,点我重新加载^_^'),
+            Image.asset('images/pages/noData.jpeg')
+          ],
+        ),
       ),
     );
   }
@@ -111,7 +116,7 @@ class _MainVideoState extends State<MainVideo> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => new VideoDetails(),
+                      builder: (context) => new VideoDetails(picUrl: results[index].url,date: results[index].desc,),
                     ));
               },
               child: Column(
