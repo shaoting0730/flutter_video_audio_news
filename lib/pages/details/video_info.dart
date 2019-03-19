@@ -154,6 +154,7 @@ class _VideoInfoState extends State<VideoInfo> {
           children: <Widget>[
             personInfo(),
             videoInfo(),
+            btnsWidget(),
             videoTag(),
           ],
         ),
@@ -225,7 +226,22 @@ class _VideoInfoState extends State<VideoInfo> {
       child: ExpansionTile(
         title: Text('${infoData['videoInfo']['title']}'),
         children: <Widget>[
-          Row(
+           Row(
+             children: <Widget>[
+               Text('🚫未经作者同意授权禁止转载')
+             ],
+           )
+        ],
+        initiallyExpanded: false,
+      ),
+    );
+  }
+
+  // 按钮Widget
+  Widget btnsWidget() {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 10.0),
+       child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               InkWell(
@@ -284,12 +300,10 @@ class _VideoInfoState extends State<VideoInfo> {
                 ),
               ),
             ],
-          )
-        ],
-        initiallyExpanded: false,
-      ),
+          ),
     );
   }
+
 
   // 视频标签
   Widget videoTag() {
@@ -317,5 +331,5 @@ class _VideoInfoState extends State<VideoInfo> {
     });
     return list;
   }
-  
+
 }
