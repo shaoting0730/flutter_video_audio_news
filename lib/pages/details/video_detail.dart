@@ -76,7 +76,7 @@ class _BottomContainerState extends State<BottomContainer>
               ],
             ),
             Padding(
-              padding: EdgeInsets.only(top: 190.0),
+              padding: EdgeInsets.only(top: 10.0),
               child: SizedBox(
                  child: IndexedStack(
                    children: <Widget>[
