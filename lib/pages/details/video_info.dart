@@ -20,8 +20,12 @@ class _VideoInfoState extends State<VideoInfo> {
       "commentCount": 85,
       "date": "02-21",
       "order": "AV45475733",
-      "comment": "习大大就程序员工作作出重要指导",
-      "subComment": "哔哩哔哩~",
+      "title": "习大大就程序员工作作出重要指导",
+      "subTitle": "哔哩哔哩~",
+      "starType":0,
+      "goldType":0,
+      "collectType":0,
+      "shareType":0,
       "starCount": 72,
       "unlikeCount": 12,
       "gold": 7,
@@ -145,7 +149,11 @@ class _VideoInfoState extends State<VideoInfo> {
       padding: EdgeInsets.all(7.0),
       child: SingleChildScrollView(
         child: Column(
-          children: <Widget>[personInfo()],
+          children: <Widget>[
+            personInfo(),
+            videoInfo(),
+
+            ],
         ),
       ),
     );
@@ -205,4 +213,83 @@ class _VideoInfoState extends State<VideoInfo> {
       ],
     );
   }
+
+  // 视频详情
+  Widget videoInfo() {
+    return Container(
+      child: ExpansionTile(
+        title: Text('${infoData['videoInfo']['title']}'),
+        children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: <Widget>[
+                 InkWell(
+                   onTap: (){},
+                   child: Column(
+                     children: <Widget>[
+                       infoData['videoInfo']['starType'] == 0?
+                         Image.asset('images/pages/star_black.png')
+                       :
+                        Image.asset('images/pages/star_red.png'),
+                       Text('14')
+                     ],
+                   ),
+                 ), 
+                 InkWell(
+                   onTap: (){},
+                   child: Column(
+                     children: <Widget>[
+                       infoData['videoInfo']['starType'] == 0?
+                         Image.asset('images/pages/unStar_black.png')
+                       :
+                        Image.asset('images/pages/unStar_red.png'),
+                       Text('14')
+                     ],
+                   ),
+                 ),    
+                 InkWell(
+                   onTap: (){},
+                   child: Column(
+                     children: <Widget>[
+                       infoData['videoInfo']['goldType'] == 0?
+                         Image.asset('images/pages/gold_black.png')
+                       :
+                        Image.asset('images/pages/gold_red.png'),
+                       Text('14')
+                     ],
+                   ),
+                 ), 
+                 InkWell(
+                   onTap: (){},
+                   child: Column(
+                     children: <Widget>[
+                       infoData['videoInfo']['collectType'] == 0?
+                         Image.asset('images/pages/collet_black.png')
+                       :
+                        Image.asset('images/pages/collet_red.png'),
+                       Text('14')
+                     ],
+                   ),
+                 ),    
+                    InkWell(
+                   onTap: (){},
+                   child: Column(
+                     children: <Widget>[
+                       infoData['videoInfo']['shareType'] == 0?
+                         Image.asset('images/pages/share_black.png')
+                       :
+                        Image.asset('images/pages/share_red.png'),
+                       Text('14')
+                     ],
+                   ),
+                 ),         
+              ],
+            )
+        ],  
+        initiallyExpanded: false,
+      ),
+    );
+  }
+
+
 }
