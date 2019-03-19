@@ -22,10 +22,10 @@ class _VideoInfoState extends State<VideoInfo> {
       "order": "AV45475733",
       "title": "习大大就程序员工作作出重要指导",
       "subTitle": "哔哩哔哩~",
-      "starType":0,
-      "goldType":0,
-      "collectType":0,
-      "shareType":0,
+      "starType": 0,
+      "goldType": 0,
+      "collectType": 0,
+      "shareType": 0,
       "starCount": 72,
       "unlikeCount": 12,
       "gold": 7,
@@ -142,6 +142,8 @@ class _VideoInfoState extends State<VideoInfo> {
     ]
   };
 
+  List<Widget> listTag;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -152,8 +154,8 @@ class _VideoInfoState extends State<VideoInfo> {
           children: <Widget>[
             personInfo(),
             videoInfo(),
-
-            ],
+            videoTag(),
+          ],
         ),
       ),
     );
@@ -183,13 +185,16 @@ class _VideoInfoState extends State<VideoInfo> {
             Padding(
               padding: EdgeInsets.only(left: 10.0),
               child: Column(
-              children: <Widget>[
-                Text('${infoData['personInfo']['name']}',style: TextStyle(fontSize:ScreenUtil().setSp(26) )),
-                Text('${infoData['personInfo']['fensi']}' + '粉丝',style: TextStyle(fontSize:ScreenUtil().setSp(18),color: Colors.black38 )),
-              ],
-            ),
+                children: <Widget>[
+                  Text('${infoData['personInfo']['name']}',
+                      style: TextStyle(fontSize: ScreenUtil().setSp(26))),
+                  Text('${infoData['personInfo']['fensi']}' + '粉丝',
+                      style: TextStyle(
+                          fontSize: ScreenUtil().setSp(18),
+                          color: Colors.black38)),
+                ],
+              ),
             )
-            
           ],
         ),
         FlatButton(
@@ -220,76 +225,97 @@ class _VideoInfoState extends State<VideoInfo> {
       child: ExpansionTile(
         title: Text('${infoData['videoInfo']['title']}'),
         children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: <Widget>[
-                 InkWell(
-                   onTap: (){},
-                   child: Column(
-                     children: <Widget>[
-                       infoData['videoInfo']['starType'] == 0?
-                         Image.asset('images/pages/star_black.png')
-                       :
-                        Image.asset('images/pages/star_red.png'),
-                       Text('14')
-                     ],
-                   ),
-                 ), 
-                 InkWell(
-                   onTap: (){},
-                   child: Column(
-                     children: <Widget>[
-                       infoData['videoInfo']['starType'] == 0?
-                         Image.asset('images/pages/unStar_black.png')
-                       :
-                        Image.asset('images/pages/unStar_red.png'),
-                       Text('14')
-                     ],
-                   ),
-                 ),    
-                 InkWell(
-                   onTap: (){},
-                   child: Column(
-                     children: <Widget>[
-                       infoData['videoInfo']['goldType'] == 0?
-                         Image.asset('images/pages/gold_black.png')
-                       :
-                        Image.asset('images/pages/gold_red.png'),
-                       Text('14')
-                     ],
-                   ),
-                 ), 
-                 InkWell(
-                   onTap: (){},
-                   child: Column(
-                     children: <Widget>[
-                       infoData['videoInfo']['collectType'] == 0?
-                         Image.asset('images/pages/collet_black.png')
-                       :
-                        Image.asset('images/pages/collet_red.png'),
-                       Text('14')
-                     ],
-                   ),
-                 ),    
-                    InkWell(
-                   onTap: (){},
-                   child: Column(
-                     children: <Widget>[
-                       infoData['videoInfo']['shareType'] == 0?
-                         Image.asset('images/pages/share_black.png')
-                       :
-                        Image.asset('images/pages/share_red.png'),
-                       Text('14')
-                     ],
-                   ),
-                 ),         
-              ],
-            )
-        ],  
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              InkWell(
+                onTap: () {},
+                child: Column(
+                  children: <Widget>[
+                    infoData['videoInfo']['starType'] == 0
+                        ? Image.asset('images/pages/star_black.png')
+                        : Image.asset('images/pages/star_red.png'),
+                    Text('14')
+                  ],
+                ),
+              ),
+              InkWell(
+                onTap: () {},
+                child: Column(
+                  children: <Widget>[
+                    infoData['videoInfo']['starType'] == 0
+                        ? Image.asset('images/pages/unStar_black.png')
+                        : Image.asset('images/pages/unStar_red.png'),
+                    Text('14')
+                  ],
+                ),
+              ),
+              InkWell(
+                onTap: () {},
+                child: Column(
+                  children: <Widget>[
+                    infoData['videoInfo']['goldType'] == 0
+                        ? Image.asset('images/pages/gold_black.png')
+                        : Image.asset('images/pages/gold_red.png'),
+                    Text('14')
+                  ],
+                ),
+              ),
+              InkWell(
+                onTap: () {},
+                child: Column(
+                  children: <Widget>[
+                    infoData['videoInfo']['collectType'] == 0
+                        ? Image.asset('images/pages/collet_black.png')
+                        : Image.asset('images/pages/collet_red.png'),
+                    Text('14')
+                  ],
+                ),
+              ),
+              InkWell(
+                onTap: () {},
+                child: Column(
+                  children: <Widget>[
+                    infoData['videoInfo']['shareType'] == 0
+                        ? Image.asset('images/pages/share_black.png')
+                        : Image.asset('images/pages/share_red.png'),
+                    Text('14')
+                  ],
+                ),
+              ),
+            ],
+          )
+        ],
         initiallyExpanded: false,
       ),
     );
   }
 
+  // 视频标签
+  Widget videoTag() {
+    return Container(
+      child: Wrap(
+          spacing: 8.0, // 主轴(水平)方向间距
+          runSpacing: 4.0, // 纵轴（垂直）方向间距
+          children: tag()),
+    );
+  }
 
+  List<Widget> tag() {
+    List<Widget> list = [];
+    infoData['videoTag'].forEach((val) {
+      list.add(
+        ClipRRect(
+          borderRadius: BorderRadius.circular(100.0),
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 15.0),
+            color: Colors.black26,
+            child: Text(val),
+          ),
+        ),
+      );
+    });
+    return list;
+  }
+  
 }
