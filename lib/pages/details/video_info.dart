@@ -33,7 +33,7 @@ class _VideoInfoState extends State<VideoInfo> {
       "transmit": 89,
     },
     "videoTag": ["指示", "娱乐", "程序员", "习大大", "视频会议", "下班", "改bug"],
-    "recommendVideo": [
+    "moreVideo": [
       {
         "title": "西瓜不能多吃",
         "pic": "https://ww1.sinaimg.cn/large/0073sXn7ly1fze98q9ydbj30ko10wmyn",
@@ -150,49 +150,14 @@ class _VideoInfoState extends State<VideoInfo> {
       color: Color.fromRGBO(240, 240, 240, 1.0),
       padding: EdgeInsets.all(7.0),
       child: ListView(
-          children: <Widget>[
-            personInfo(),
-            videoInfo(),
-            btnsWidget(),
-            videoTag(),
-            Text('3333'),
-            Text('3333'),
-            Text('3333'),
-            Text('3333'),
-            Text('3333'),
-            Text('3333'),
-            Text('3333'),
-            Text('3333'),
-            Text('3333'),
-                        Text('3333'),
-            Text('3333'),
-            Text('3333'),
-            Text('3333'),
-            Text('3333'),
-            Text('3333'),
-            Text('3333'),
-            Text('3333'),
-            Text('3333'),
-                        Text('3333'),
-            Text('3333'),
-            Text('3333'),
-            Text('3333'),
-            Text('3333'),
-            Text('3333'),
-            Text('3333'),
-            Text('3333'),
-            Text('3333'),            Text('3333'),
-            Text('3333'),
-            Text('3333'),
-            Text('3333'),
-            Text('3333'),
-            Text('3333'),
-            Text('3333'),
-            Text('3333'),
-            Text('3333'),
-
-          ],
-        ),
+        children: <Widget>[
+          personInfo(),
+          videoInfo(),
+          btnsWidget(),
+          videoTag(),
+          moreVideo(),
+        ],
+      ),
     );
   }
 
@@ -260,11 +225,9 @@ class _VideoInfoState extends State<VideoInfo> {
       child: ExpansionTile(
         title: Text('${infoData['videoInfo']['title']}'),
         children: <Widget>[
-           Row(
-             children: <Widget>[
-               Text('🚫未经作者同意授权禁止转载')
-             ],
-           )
+          Row(
+            children: <Widget>[Text('🚫未经作者同意授权禁止转载')],
+          )
         ],
         initiallyExpanded: false,
       ),
@@ -275,69 +238,68 @@ class _VideoInfoState extends State<VideoInfo> {
   Widget btnsWidget() {
     return Padding(
       padding: EdgeInsets.symmetric(vertical: 10.0),
-       child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              InkWell(
-                onTap: () {},
-                child: Column(
-                  children: <Widget>[
-                    infoData['videoInfo']['starType'] == 0
-                        ? Image.asset('images/pages/star_black.png')
-                        : Image.asset('images/pages/star_red.png'),
-                    Text('14')
-                  ],
-                ),
-              ),
-              InkWell(
-                onTap: () {},
-                child: Column(
-                  children: <Widget>[
-                    infoData['videoInfo']['starType'] == 0
-                        ? Image.asset('images/pages/unStar_black.png')
-                        : Image.asset('images/pages/unStar_red.png'),
-                    Text('14')
-                  ],
-                ),
-              ),
-              InkWell(
-                onTap: () {},
-                child: Column(
-                  children: <Widget>[
-                    infoData['videoInfo']['goldType'] == 0
-                        ? Image.asset('images/pages/gold_black.png')
-                        : Image.asset('images/pages/gold_red.png'),
-                    Text('14')
-                  ],
-                ),
-              ),
-              InkWell(
-                onTap: () {},
-                child: Column(
-                  children: <Widget>[
-                    infoData['videoInfo']['collectType'] == 0
-                        ? Image.asset('images/pages/collet_black.png')
-                        : Image.asset('images/pages/collet_red.png'),
-                    Text('14')
-                  ],
-                ),
-              ),
-              InkWell(
-                onTap: () {},
-                child: Column(
-                  children: <Widget>[
-                    infoData['videoInfo']['shareType'] == 0
-                        ? Image.asset('images/pages/share_black.png')
-                        : Image.asset('images/pages/share_red.png'),
-                    Text('14')
-                  ],
-                ),
-              ),
-            ],
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: <Widget>[
+          InkWell(
+            onTap: () {},
+            child: Column(
+              children: <Widget>[
+                infoData['videoInfo']['starType'] == 0
+                    ? Image.asset('images/pages/star_black.png')
+                    : Image.asset('images/pages/star_red.png'),
+                Text('14')
+              ],
+            ),
           ),
+          InkWell(
+            onTap: () {},
+            child: Column(
+              children: <Widget>[
+                infoData['videoInfo']['starType'] == 0
+                    ? Image.asset('images/pages/unStar_black.png')
+                    : Image.asset('images/pages/unStar_red.png'),
+                Text('14')
+              ],
+            ),
+          ),
+          InkWell(
+            onTap: () {},
+            child: Column(
+              children: <Widget>[
+                infoData['videoInfo']['goldType'] == 0
+                    ? Image.asset('images/pages/gold_black.png')
+                    : Image.asset('images/pages/gold_red.png'),
+                Text('14')
+              ],
+            ),
+          ),
+          InkWell(
+            onTap: () {},
+            child: Column(
+              children: <Widget>[
+                infoData['videoInfo']['collectType'] == 0
+                    ? Image.asset('images/pages/collet_black.png')
+                    : Image.asset('images/pages/collet_red.png'),
+                Text('14')
+              ],
+            ),
+          ),
+          InkWell(
+            onTap: () {},
+            child: Column(
+              children: <Widget>[
+                infoData['videoInfo']['shareType'] == 0
+                    ? Image.asset('images/pages/share_black.png')
+                    : Image.asset('images/pages/share_red.png'),
+                Text('14')
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
-
 
   // 视频标签
   Widget videoTag() {
@@ -366,4 +328,82 @@ class _VideoInfoState extends State<VideoInfo> {
     return list;
   }
 
+  // 下方列表
+  Widget moreVideo() {
+    if (infoData['moreVideo'].length != 0) {
+      List<Widget> list = [];
+      infoData['moreVideo'].forEach((e) {
+        list.add(
+          InkWell(
+            onTap: () {},
+            child: Container(
+              padding: EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                  border: Border(
+                      bottom: BorderSide(width: 0.5, color: Colors.black26))),
+              child: Row(
+                children: <Widget>[
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(4.0),
+                    child: Image.network(e['pic'],
+                        width: ScreenUtil().setWidth(250),
+                        height: ScreenUtil().setHeight(100),
+                        fit: BoxFit.cover),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          e['title'],
+                          maxLines: 1,
+                        ),
+                        Text('📱' + e['up'], maxLines: 1),
+                        Container(
+                          width: ScreenUtil().setWidth(750 - 320),
+                          child: Stack(
+                            children: <Widget>[
+                              Row(
+                                children: <Widget>[
+                                  Row(
+                                    children: <Widget>[
+                                      Image.asset('images/pages/play.png'),
+                                      Text(e['playCount'].toString()),
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.only(left: 10.0),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Image.asset(
+                                            'images/pages/commen_black.png'),
+                                        Text(e['commentCount'].toString())
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Positioned(
+                                top: 0.0,
+                                right: 10.0,
+                                child: Image.asset('images/pages/more.png'),
+                              ),
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      });
+      return Column(children: list);
+    } else {
+      return Text('没数据');
+    }
+  }
 }

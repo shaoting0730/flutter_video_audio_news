@@ -94,8 +94,8 @@ class VideoPageState extends State<VideoPage> with SingleTickerProviderStateMixi
           width: ScreenUtil().setWidth(750),
           child: TabBar(
             // isScrollable: true,
-            //是否可以滚动
             controller: mTabController,
+            indicatorSize: TabBarIndicatorSize.label,
             labelColor: Colors.red,
             unselectedLabelColor: Color(0xff666666),
             labelStyle: TextStyle(fontSize: 16.0),
