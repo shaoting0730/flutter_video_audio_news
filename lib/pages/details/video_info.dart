@@ -149,16 +149,50 @@ class _VideoInfoState extends State<VideoInfo> {
     return Container(
       color: Color.fromRGBO(240, 240, 240, 1.0),
       padding: EdgeInsets.all(7.0),
-      child: SingleChildScrollView(
-        child: Column(
+      child: ListView(
           children: <Widget>[
             personInfo(),
             videoInfo(),
             btnsWidget(),
             videoTag(),
+            Text('3333'),
+            Text('3333'),
+            Text('3333'),
+            Text('3333'),
+            Text('3333'),
+            Text('3333'),
+            Text('3333'),
+            Text('3333'),
+            Text('3333'),
+                        Text('3333'),
+            Text('3333'),
+            Text('3333'),
+            Text('3333'),
+            Text('3333'),
+            Text('3333'),
+            Text('3333'),
+            Text('3333'),
+            Text('3333'),
+                        Text('3333'),
+            Text('3333'),
+            Text('3333'),
+            Text('3333'),
+            Text('3333'),
+            Text('3333'),
+            Text('3333'),
+            Text('3333'),
+            Text('3333'),            Text('3333'),
+            Text('3333'),
+            Text('3333'),
+            Text('3333'),
+            Text('3333'),
+            Text('3333'),
+            Text('3333'),
+            Text('3333'),
+            Text('3333'),
+
           ],
         ),
-      ),
     );
   }
 

@@ -127,8 +127,7 @@ class _MainVideoState extends State<MainVideo> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => new VideoDetails(
-                            picUrl: results[index].url,
-                            date: results[index].desc,
+                            
                           ),
                     ));
               },

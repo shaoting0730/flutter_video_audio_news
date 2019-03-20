@@ -6,92 +6,126 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';  // UI适配库
 import './comment_detail.dart'; // 评论
 import './video_info.dart'; // 简介
 
-class VideoDetails extends StatelessWidget {
-  final String date;
-  final String picUrl;
-  VideoDetails({Key key, @required this.picUrl, this.date}) : super(key: key);
 
+class VideoDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('视频详情'),
       ),
-      body: Column(
-        children: <Widget>[
-          VideoContainer(),
-          BottomContainer(picUrl: picUrl,date: date,),
-        ],
-      ),
+      body: VideoPage(),
     );
   }
 }
 
-// 底部视图
-class BottomContainer extends StatefulWidget {
-  final String date;
-  final String picUrl;
-  BottomContainer({Key key, @required this.picUrl, this.date})
-      : super(key: key);
+
+class VideoPage extends StatefulWidget {
   @override
-  _BottomContainerState createState() => _BottomContainerState();
+  State<StatefulWidget> createState() => VideoPageState();
 }
 
-class _BottomContainerState extends State<BottomContainer>
-    with SingleTickerProviderStateMixin {
-  TabController _controller;
-  int _index = 0;
+class TabTitle {
+  String title;
+  Widget widget;
+
+  TabTitle(this.title, this.widget);
+}
+
+class VideoPageState extends State<VideoPage> with SingleTickerProviderStateMixin {
+  TabController mTabController;
+  PageController mPageController = PageController(initialPage: 0);
+  List<TabTitle> tabList;
+  var currentPage = 0;
+  var isPageCanChanged = true;
+
   @override
   void initState() {
     super.initState();
-    _controller = TabController(length: 2, vsync: this);
+    initTabData();
+    mTabController = TabController(
+      length: tabList.length,
+      vsync: this,
+    );
+    mTabController.addListener(() {
+      //TabBar的监听
+      if (mTabController.indexIsChanging) {
+        //判断TabBar是否切换
+        print(mTabController.index);
+        onPageChange(mTabController.index, p: mPageController);
+      }
+    });
+  }
+
+  initTabData() {
+    tabList = [
+      new TabTitle('简介', VideoInfo()),
+      new TabTitle('评论', CommentDetail()),
+    ];
+  }
+
+  onPageChange(int index, {PageController p, TabController t}) async {
+    if (p != null) {
+      //判断是哪一个切换
+      isPageCanChanged = false;
+      await mPageController.animateToPage(index,
+          duration: Duration(milliseconds: 500),
+          curve: Curves.ease); //等待pageview切换完毕,再释放pageivew监听
+      isPageCanChanged = true;
+    } else {
+      mTabController.animateTo(index); //切换Tabbar
+    }
   }
 
   @override
   void dispose() {
-    _controller.dispose();
     super.dispose();
+    mTabController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child:  Column(
-          children: <Widget>[
-            TabBar(
-              controller: _controller,
-              unselectedLabelColor:Colors.black,
-              labelColor:Colors.red,
-              indicatorSize: TabBarIndicatorSize.label,
-               labelStyle: new TextStyle(fontSize: ScreenUtil().setSp(32)),
-               unselectedLabelStyle: new TextStyle(fontSize: ScreenUtil().setSp(28)),
-              onTap: (index){
-               setState(() {
-            _index = index;
-             });
-              },
-              tabs: <Widget>[
-                Text('简介'),
-                Text('评论')
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.only(top: 10.0),
-              child: SizedBox(
-                 child: IndexedStack(
-                   children: <Widget>[
-                     VideoInfo(),
-                     CommentDetail()
-                   ],
-                   index: _index,
-                 ),
-              ),
-            ),
-          ],
+    return Column(
+      children: <Widget>[
+        VideoContainer(),
+        Container(
+          color: new Color(0xfff4f5f6),
+          height: 38.0,
+          width: ScreenUtil().setWidth(750),
+          child: TabBar(
+            // isScrollable: true,
+            //是否可以滚动
+            controller: mTabController,
+            labelColor: Colors.red,
+            unselectedLabelColor: Color(0xff666666),
+            labelStyle: TextStyle(fontSize: 16.0),
+            tabs: tabList.map((item) {
+              return Tab(
+                text: item.title,
+              ); 
+            }).toList(),
+          ),
         ),
+        Expanded(
+          child: PageView.builder(
+            itemCount: tabList.length,
+            onPageChanged: (index) {
+              if (isPageCanChanged) {
+                //由于pageview切换是会回调这个方法,又会触发切换tabbar的操作,所以定义一个flag,控制pageview的回调
+                onPageChange(index);
+              }
+            },
+            controller: mPageController,
+            itemBuilder: (BuildContext context, int index) {
+              return tabList[index].widget;
+            },
+          ),
+        )
+      ],
     );
   }
 }
+
 
 // 视频播放
 class VideoContainer extends StatefulWidget {
