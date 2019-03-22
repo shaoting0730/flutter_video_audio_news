@@ -83,17 +83,61 @@ class _CommentDetailState extends State<CommentDetail> {
     },
   ];
 
-   int h = 50; //广告高度
-
+  int h = 50; //广告高度
+  TextEditingController _inputController = new TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        // color: Color.fromRGBO(240, 240, 240, 1.0),
-        padding: EdgeInsets.all(7.0),
-        child: ListView(
-          children: <Widget>[adWidget(), titleWidget(), commentItem()],
-        ));
+      // color: Color.fromRGBO(240, 240, 240, 1.0),
+      padding: EdgeInsets.all(7.0),
+      child: Stack(
+        children: <Widget>[
+          ListView(
+            children: <Widget>[adWidget(), titleWidget(), commentItem()],
+          ),
+          Positioned(
+            bottom: 5.0,
+            left: 1.0,
+            child: inputWidget(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // 底部输入框
+  Widget inputWidget() {
+    return Container(
+      decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(top: BorderSide(width: 0.5, color: Colors.black))),
+      width: ScreenUtil().setWidth(750),
+      height: ScreenUtil().setHeight(80),
+      child: Row(
+        children: <Widget>[
+          Expanded(
+            child: TextField(
+              style: TextStyle(color: Colors.red),
+              controller: _inputController,
+              decoration: InputDecoration(
+                  fillColor: Colors.black12,
+                  contentPadding: EdgeInsets.all(10.0),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  hintText: "索点什么",
+                  filled: true),
+            ),
+            flex: 8,
+          ),
+          Expanded(
+            child: Icon(Icons.person, color: Colors.pink),
+            flex: 1,
+          )
+        ],
+      ),
+    );
   }
 
   // ad广告位
@@ -105,9 +149,12 @@ class _CommentDetailState extends State<CommentDetail> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          Text('   我是一条广告',style: TextStyle(color: Colors.white),),
+          Text(
+            '   我是一条广告',
+            style: TextStyle(color: Colors.white),
+          ),
           IconButton(
-            icon: Icon(Icons.close,color: Colors.white),
+            icon: Icon(Icons.close, color: Colors.white),
             onPressed: () {
               setState(() {
                 h = 0;
@@ -130,6 +177,9 @@ class _CommentDetailState extends State<CommentDetail> {
     commentList.forEach((e) {
       list.add(
         Container(
+          decoration: BoxDecoration(
+              border:
+                  Border(bottom: BorderSide(width: 1, color: Colors.black12))),
           padding: EdgeInsets.fromLTRB(10.0, 10.0, 10.0, 8.0),
           child: Row(
             children: <Widget>[
@@ -176,7 +226,10 @@ class _CommentDetailState extends State<CommentDetail> {
           Positioned(
             top: 0.0,
             right: 10.0,
-            child: Text(e['date'],style: TextStyle(fontSize: ScreenUtil().setSp(18)),),
+            child: Text(
+              e['date'],
+              style: TextStyle(fontSize: ScreenUtil().setSp(18)),
+            ),
           ),
         ],
       ),
@@ -201,23 +254,22 @@ class _CommentDetailState extends State<CommentDetail> {
       padding: EdgeInsets.only(left: 10.0),
       width: ScreenUtil().setWidth(200),
       child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,  
-      children: <Widget>[
-        InkWell(
-            onTap: () {},
-            child: Image.asset('images/pages/star_black.png',width: ScreenUtil().setWidth(20))
-          ),
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
           InkWell(
-            onTap: () {},
-            child: Image.asset('images/pages/unStar_black.png',width: ScreenUtil().setWidth(20))
-          ),
-        InkWell(
-            onTap: () {},
-            child: Image.asset('images/pages/share_black.png',width: ScreenUtil().setWidth(20))
-          ),
-      ],
-    ));
+              onTap: () {},
+              child: Image.asset('images/pages/star_black.png',
+                  width: ScreenUtil().setWidth(20))),
+          InkWell(
+              onTap: () {},
+              child: Image.asset('images/pages/unStar_black.png',
+                  width: ScreenUtil().setWidth(20))),
+          InkWell(
+              onTap: () {},
+              child: Image.asset('images/pages/share_black.png',
+                  width: ScreenUtil().setWidth(20))),
+        ],
+      ),
+    );
   }
-
-
 }

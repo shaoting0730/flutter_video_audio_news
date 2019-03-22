@@ -388,7 +388,7 @@ class _VideoInfoState extends State<VideoInfo> {
                               ),
                               Positioned(
                                 top: 0.0,
-                                right: 10.0,
+                                right: 30.0,
                                 child: Image.asset('images/pages/more.png'),
                               ),
                             ],
