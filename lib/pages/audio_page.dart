@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/counter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart'; // UI适配库
+import 'package:audioplayers/audioplayers.dart';
 
 
 class AudioPage extends StatelessWidget {
@@ -28,6 +29,7 @@ class _MainAudioState extends State<MainAudio> {
       bloc: _counterBloc,
       builder: (BuildContext context, Map theme) {
         return Scaffold(
+          // 导航条渐变色
             appBar: PreferredSize(
               child: Container(
                 child: AppBar(
@@ -52,8 +54,42 @@ class _MainAudioState extends State<MainAudio> {
               ),
               preferredSize: Size(MediaQuery.of(context).size.width, 45),
             ),
-            body: Text('音频'));
+            body: AudioContainer(),
+            );
       },
+    );
+  }
+}
+
+// 音频
+class AudioContainer extends StatefulWidget {
+  final Widget child;
+
+  AudioContainer({Key key, this.child}) : super(key: key);
+
+  _AudioContainerState createState() => _AudioContainerState();
+}
+
+class _AudioContainerState extends State<AudioContainer> {
+   AudioPlayer audioPlayer = new AudioPlayer();
+
+    play() async {
+    int result = await audioPlayer.play('http://zhangmenshiting.qianqian.com/data2/music/3519cdb70c14a95076e8c006c7226963/599516462/599516462.mp3?xcode=b4d663fa23a8fa59b123be2e4a685e68');
+    if (result == 1) {
+      // success
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    play();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+       child: widget.child,
     );
   }
 }
