@@ -16,6 +16,7 @@
  [下拉刷新&上拉加载: flutter_easyrefresh]( https://github.com/xuelongqy/flutter_easyrefresh )  <br/>
  [瀑布流: flutter_staggered_grid_view]( https://github.com/letsar/flutter_staggered_grid_view )  <br/>
  [视频播放: chewie]( https://github.com/brianegan/chewie )  <br/>
+ [音乐播放: https://github.com/luanpotter/audioplayers]( https://github.com/luanpotter/audioplayers )  <br/>
  [轮播: flutter_swiper]( https://github.com/best-flutter/flutter_swiper )  <br/>
 
 
