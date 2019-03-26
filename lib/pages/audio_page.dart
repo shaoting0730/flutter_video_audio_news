@@ -78,6 +78,7 @@ class AudioContainer extends StatefulWidget {
 class _AudioContainerState extends State<AudioContainer> {
   AudioPlayer audioPlayer = new AudioPlayer();
   List songsResults = []; // 歌曲list数据数组
+  AudioPlayModel songModel;
 
   @override
   void initState() {
@@ -103,8 +104,8 @@ class _AudioContainerState extends State<AudioContainer> {
     String formdata = '&songid=' + songId;
      await get('audioInfo',formData: formdata).then((val) {
       var data = json.decode(val.toString());
-      AudioPlayModel model = AudioPlayModel.fromJson(data);
-      audioPlayer.play(model.bitrate.fileLink);
+      songModel = AudioPlayModel.fromJson(data);
+      audioPlayer.play(songModel.bitrate.fileLink);
     
     });
 
@@ -117,4 +118,10 @@ class _AudioContainerState extends State<AudioContainer> {
       child: widget.child,
     );
   }
+
+  
+  //  背景widget
+  
+
+
 }
