@@ -8,9 +8,9 @@ import './tabbar.dart';
 void main() {
   // runApp(MyApp());
   runApp(BlocProvider<CounterBloc>(
-      bloc: CounterBloc(),
-      child: BlocProvider(child: MyApp(), bloc: CounterBloc()),
-    ));
+    bloc: CounterBloc(),
+    child: BlocProvider(child: MyApp(), bloc: CounterBloc()),
+  ));
   if (Platform.isAndroid) {
     SystemUiOverlayStyle systemUiOverlayStyle =
         SystemUiOverlayStyle(statusBarColor: Colors.transparent);
@@ -24,15 +24,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final CounterBloc _counterBloc = BlocProvider.of<CounterBloc>(context);
     return BlocBuilder(
-       bloc:_counterBloc,
-       builder: (BuildContext context,Map theme){
-           return MaterialApp(
-      title: 'Flutter 实战练习',
-      theme: ThemeData(primaryColor: theme['color']),
-      debugShowCheckedModeBanner: false, // 去除debug旗标
-      home: Tabbar(),
-    );
-       },
+      bloc: _counterBloc,
+      builder: (BuildContext context, Map theme) {
+        return MaterialApp(
+          title: 'Flutter 实战练习',
+          theme: ThemeData(primaryColor: theme['color']),
+          debugShowCheckedModeBanner: false, // 去除debug旗标
+          home: Tabbar(),
+        );
+      },
     );
   }
 }

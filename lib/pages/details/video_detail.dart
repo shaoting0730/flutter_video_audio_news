@@ -2,23 +2,52 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:chewie/chewie.dart'; // 播放
 import 'package:video_player/video_player.dart'; // 播放
-import 'package:flutter_screenutil/flutter_screenutil.dart';  // UI适配库
+import 'package:flutter_screenutil/flutter_screenutil.dart'; // UI适配库
 import './comment_detail.dart'; // 评论
 import './video_info.dart'; // 简介
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../bloc/counter_bloc.dart';
 
 class VideoDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('视频详情'),
-      ),
-      body: VideoPage(),
+    final CounterBloc _counterBloc = BlocProvider.of<CounterBloc>(context);
+    return BlocBuilder(
+        bloc: _counterBloc,
+        builder: (BuildContext context, Map theme) {
+          return Scaffold(
+            // 导航条渐变色
+            appBar: PreferredSize(
+              child: Container(
+                child: AppBar(
+                  title: Text(
+                    '视频详情',
+                    style: TextStyle(
+                        fontFamily: '${theme['fontFamily']}',
+                        fontSize: ScreenUtil().setSp(60)),
+                  ),
+                  backgroundColor: Colors.transparent,
+                  elevation: 0.0,
+                ),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      theme['color'],
+                      Colors.white,
+                    ],
+                  ),
+                ),
+              ),
+              preferredSize: Size(MediaQuery.of(context).size.width, 45),
+            ),
+            body: VideoPage(),
+          );
+        },
     );
   }
 }
-
 
 class VideoPage extends StatefulWidget {
   @override
@@ -32,7 +61,8 @@ class TabTitle {
   TabTitle(this.title, this.widget);
 }
 
-class VideoPageState extends State<VideoPage> with SingleTickerProviderStateMixin {
+class VideoPageState extends State<VideoPage>
+    with SingleTickerProviderStateMixin {
   TabController mTabController;
   PageController mPageController = PageController(initialPage: 0);
   List<TabTitle> tabList;
@@ -102,7 +132,7 @@ class VideoPageState extends State<VideoPage> with SingleTickerProviderStateMixi
             tabs: tabList.map((item) {
               return Tab(
                 text: item.title,
-              ); 
+              );
             }).toList(),
           ),
         ),
@@ -125,7 +155,6 @@ class VideoPageState extends State<VideoPage> with SingleTickerProviderStateMixi
     );
   }
 }
-
 
 // 视频播放
 class VideoContainer extends StatefulWidget {

@@ -9,73 +9,12 @@ import '../model/audio_paly_model.dart'; // 歌曲信息模型
 
 import 'dart:convert';
 
-class AudioPage extends StatelessWidget {
+class AudioPage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(primaryColor: Colors.blueAccent),
-      debugShowCheckedModeBanner: false, // 去除debug旗标
-      home: MainAudio(),
-    );
-  }
+  _AudioPageState createState() => _AudioPageState();
 }
 
-class MainAudio extends StatefulWidget {
-  @override
-  _MainAudioState createState() => _MainAudioState();
-}
-
-class _MainAudioState extends State<MainAudio> {
-  @override
-  Widget build(BuildContext context) {
-    final CounterBloc _counterBloc = BlocProvider.of<CounterBloc>(context);
-    return BlocBuilder(
-      bloc: _counterBloc,
-      builder: (BuildContext context, Map theme) {
-        return Scaffold(
-          // 导航条渐变色
-          appBar: PreferredSize(
-            child: Container(
-              child: AppBar(
-                title: Text(
-                  '音频',
-                  style: TextStyle(
-                      fontFamily: '${theme['fontFamily']}',
-                      fontSize: ScreenUtil().setSp(60)),
-                ),
-                backgroundColor: Colors.transparent,
-                elevation: 0.0,
-              ),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [
-                    theme['color'],
-                    Colors.white,
-                  ],
-                ),
-              ),
-            ),
-            preferredSize: Size(MediaQuery.of(context).size.width, 45),
-          ),
-          body: AudioContainer(),
-        );
-      },
-    );
-  }
-}
-
-// 音频
-class AudioContainer extends StatefulWidget {
-  final Widget child;
-
-  AudioContainer({Key key, this.child}) : super(key: key);
-
-  _AudioContainerState createState() => _AudioContainerState();
-}
-
-class _AudioContainerState extends State<AudioContainer> {
+class _AudioPageState extends State<AudioPage> {
   AudioPlayer audioPlayer = new AudioPlayer();
   List songsResults = []; // 歌曲list数据数组
   AudioPlayModel songModel;
@@ -91,10 +30,10 @@ class _AudioContainerState extends State<AudioContainer> {
   void _getVideoData() async {
     await get('audioList').then((val) {
       var data = json.decode(val.toString());
-      AudioListmodel model = AudioListmodel.fromJson(data);  // 赋值model
+      AudioListmodel model = AudioListmodel.fromJson(data); // 赋值model
       songsResults.addAll(model.songList);
       // 默认加载第一首
-      _play(0);
+      // _play(0);
     });
   }
 
@@ -102,26 +41,21 @@ class _AudioContainerState extends State<AudioContainer> {
   _play(index) async {
     String songId = songsResults[index].songId.toString();
     String formdata = '&songid=' + songId;
-     await get('audioInfo',formData: formdata).then((val) {
+    await get('audioInfo', formData: formdata).then((val) {
       var data = json.decode(val.toString());
       songModel = AudioPlayModel.fromJson(data);
       audioPlayer.play(songModel.bitrate.fileLink);
-    
     });
-
-    
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: widget.child,
+    final CounterBloc _counterBloc = BlocProvider.of<CounterBloc>(context);
+    return BlocBuilder(
+      bloc: _counterBloc,
+      builder: (BuildContext context, Map theme) {
+        return Scaffold();
+      },
     );
   }
-
-  
-  //  背景widget
-  
-
-
 }
