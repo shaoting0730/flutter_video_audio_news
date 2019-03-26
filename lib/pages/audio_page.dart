@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/counter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart'; // UI适配库
-import 'package:audioplayers/audioplayers.dart';
+import 'package:audioplayers/audioplayers.dart'; // audio
+import '../service/service_method.dart'; // 网络请求
+import '../model/audio_list_model.dart'; // 歌曲列表模型
+import '../model/audio_paly_model.dart'; // 歌曲信息模型
 
+import 'dart:convert';
 
 class AudioPage extends StatelessWidget {
   @override
@@ -30,32 +34,33 @@ class _MainAudioState extends State<MainAudio> {
       builder: (BuildContext context, Map theme) {
         return Scaffold(
           // 导航条渐变色
-            appBar: PreferredSize(
-              child: Container(
-                child: AppBar(
-                  title: Text('音频',
+          appBar: PreferredSize(
+            child: Container(
+              child: AppBar(
+                title: Text(
+                  '音频',
                   style: TextStyle(
                       fontFamily: '${theme['fontFamily']}',
                       fontSize: ScreenUtil().setSp(60)),
-                  ),
-                  backgroundColor: Colors.transparent,
-                  elevation: 0.0,
                 ),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      theme['color'],
-                      Colors.white,
-                    ],
-                  ),
+                backgroundColor: Colors.transparent,
+                elevation: 0.0,
+              ),
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    theme['color'],
+                    Colors.white,
+                  ],
                 ),
               ),
-              preferredSize: Size(MediaQuery.of(context).size.width, 45),
             ),
-            body: AudioContainer(),
-            );
+            preferredSize: Size(MediaQuery.of(context).size.width, 45),
+          ),
+          body: AudioContainer(),
+        );
       },
     );
   }
@@ -71,25 +76,45 @@ class AudioContainer extends StatefulWidget {
 }
 
 class _AudioContainerState extends State<AudioContainer> {
-   AudioPlayer audioPlayer = new AudioPlayer();
-
-    play() async {
-    int result = await audioPlayer.play('http://zhangmenshiting.qianqian.com/data2/music/3519cdb70c14a95076e8c006c7226963/599516462/599516462.mp3?xcode=b4d663fa23a8fa59b123be2e4a685e68');
-    if (result == 1) {
-      // success
-    }
-  }
+  AudioPlayer audioPlayer = new AudioPlayer();
+  List songsResults = []; // 歌曲list数据数组
 
   @override
   void initState() {
     super.initState();
-    play();
+    // play();
+    _getVideoData();
+  }
+
+  // 获取音频列表数据
+  void _getVideoData() async {
+    await get('audioList').then((val) {
+      var data = json.decode(val.toString());
+      AudioListmodel model = AudioListmodel.fromJson(data);  // 赋值model
+      songsResults.addAll(model.songList);
+      // 默认加载第一首
+      _play(0);
+    });
+  }
+
+  // 播放歌曲
+  _play(index) async {
+    String songId = songsResults[index].songId.toString();
+    String formdata = '&songid=' + songId;
+     await get('audioInfo',formData: formdata).then((val) {
+      var data = json.decode(val.toString());
+      AudioPlayModel model = AudioPlayModel.fromJson(data);
+      audioPlayer.play(model.bitrate.fileLink);
+    
+    });
+
+    
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-       child: widget.child,
+      child: widget.child,
     );
   }
 }
