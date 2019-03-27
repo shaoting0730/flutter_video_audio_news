@@ -7,7 +7,8 @@ import '../service/service_method.dart'; // 网络请求
 import '../model/audio_list_model.dart'; // 歌曲列表模型
 import '../model/audio_paly_model.dart'; // 歌曲信息模型
 import 'dart:ui'; //引入ui库，因为ImageFilter Widget在这个里边。
-
+import './animas/needle_anim.dart'; //  唱针
+import './animas/record_anim.dart'; // 圆盘
 import 'dart:convert';
 
 class AudioPage extends StatefulWidget {
@@ -15,18 +16,77 @@ class AudioPage extends StatefulWidget {
   _AudioPageState createState() => _AudioPageState();
 }
 
-class _AudioPageState extends State<AudioPage> {
+class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
   AudioPlayer audioPlayer = new AudioPlayer();
   List songsResults = []; // 歌曲list数据数组
   AudioPlayModel songModel;
   String picPremium =
-      'https://ww1.sinaimg.cn/large/0073sXn7ly1fze9706gdzj30ae0kqmyw'; //背景图片
-  double _value = 0;
+      'https://ww1.sinaimg.cn/large/0073sXn7ly1fze9706gdzj30ae0kqmyw'; // 背景图片, 先给一张图片,省的报警告
+  double _value = 0; // 进度条初始值
+  int index = 0; // 默认加载第一首
+  String songURL = ''; // 当前播放url
+  bool isPlay = false; // 播放状态 默认未播放
+  bool first = false; // 是否是首次点击播放按钮
+  String songName = ''; //歌曲名
+  String startTime = '00:00'; // 开始时间
+  String endTime = '00:00'; // 结束时间
+
+  AnimationController controllerRecord;
+  Animation<double> animationRecord;
+  Animation<double> animationNeedle;
+  AnimationController controllerNeedle;
+  final _rotateTween = new Tween<double>(begin: -0.15, end: 0.0);
+  final _commonTween = new Tween<double>(begin: 0.0, end: 1.0);
+
   @override
   void initState() {
     super.initState();
-    // play();
+    controllerRecord = new AnimationController(
+        duration: const Duration(milliseconds: 15000), vsync: this);
+    animationRecord =
+        new CurvedAnimation(parent: controllerRecord, curve: Curves.linear);
+
+    controllerNeedle = new AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+    animationNeedle =
+        new CurvedAnimation(parent: controllerNeedle, curve: Curves.linear);
+
+    animationRecord.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        controllerRecord.repeat();
+      } else if (status == AnimationStatus.dismissed) {
+        controllerRecord.forward();
+      }
+    });
+
+    // 播放完成
+    audioPlayer.onPlayerCompletion.listen((event) {
+      _play(index + 1);
+    });
+
+    // 时间变化
+    audioPlayer.onAudioPositionChanged.listen((Duration p) {
+      // print('Current position: $p');
+    });
+
+    // 播放状态改变
+    audioPlayer.onPlayerStateChanged.listen((AudioPlayerState s) {
+      print('Current player state: $s');
+    });
+
+    audioPlayer.onDurationChanged.listen((Duration d) {
+      print('Max duration: $d');
+    });
+
     _getVideoData();
+  }
+
+  @override
+  void dispose() {
+    controllerNeedle.dispose();
+    super.dispose();
   }
 
   // 获取音频列表数据
@@ -49,8 +109,12 @@ class _AudioPageState extends State<AudioPage> {
       songModel = AudioPlayModel.fromJson(data);
       setState(() {
         picPremium = songModel.songinfo.picPremium;
+        songURL = songModel.bitrate.fileLink;
+        songName = songModel.songinfo.title + '--' + songModel.songinfo.author;
       });
-      // audioPlayer.play(songModel.bitrate.fileLink);
+      if (index >= 1) {
+        audioPlayer.play(songURL);
+      }
     });
   }
 
@@ -109,15 +173,17 @@ class _AudioPageState extends State<AudioPage> {
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height - 90,
       child: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            _nameWidget(),
-            _songWidget(),
-            _btnsWidget(),
-            _progressWidget(),
-            _controBtnsWidget()
-          ],
+        child: SingleChildScrollView(
+          // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          child: Column(
+            children: <Widget>[
+              _nameWidget(),
+              _songWidget(),
+              _btnsWidget(),
+              _progressWidget(),
+              _controBtnsWidget()
+            ],
+          ),
         ),
       ),
     );
@@ -126,16 +192,22 @@ class _AudioPageState extends State<AudioPage> {
   // 歌曲名
   Widget _nameWidget() {
     return Container(
-      child: Text('歌曲名',textAlign: TextAlign.center),
+      child: Text(songName, textAlign: TextAlign.center),
     );
   }
 
   // 唱针
   Widget _styliWidget() {
     return Container(
-      padding: EdgeInsets.only(top: 10.0,left: 30),
-      child: Image.asset('images/pages/styli.png'),
-      width: ScreenUtil().setWidth(200),
+      padding: EdgeInsets.only(top: 22.0, left: 30),
+      width: ScreenUtil().setWidth(180),
+      child: PivotTransition(
+        turns: _rotateTween.animate(controllerNeedle),
+        alignment: FractionalOffset.topLeft,
+        child: new Container(
+          child: new Image.asset("images/pages/styli.png"),
+        ),
+      ),
     );
   }
 
@@ -146,23 +218,23 @@ class _AudioPageState extends State<AudioPage> {
         children: <Widget>[
           // Image.asset('images/pages/film.png'),
           Container(
-              width: 240,
-              height: 240,
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white30, width: 6),
-                  borderRadius: BorderRadius.circular(190),
-                  image: DecorationImage(
-                    image: AssetImage('images/pages/film.png'),
-                    fit: BoxFit.cover,
-                  )),
-            ),
+            width: 240,
+            height: 240,
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.white30, width: 6),
+                borderRadius: BorderRadius.circular(190),
+                image: DecorationImage(
+                  image: AssetImage('images/pages/film.png'),
+                  fit: BoxFit.cover,
+                )),
+          ),
           Positioned(
             left: 42,
-            top: 40,
-            child: CircleAvatar(
-              radius: 78,
-              backgroundImage: NetworkImage(
-                  'https://ws1.sinaimg.cn/large/0065oQSqly1g0ajj4h6ndj30sg11xdmj.jpg'),
+            top: -57,
+            child: Container(
+              child: RotateRecord(
+                  animation: _commonTween.animate(controllerRecord)),
+              margin: EdgeInsets.only(top: 100.0),
             ),
           ),
         ],
@@ -265,26 +337,66 @@ class _AudioPageState extends State<AudioPage> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           InkWell(
-            onTap: (){},
-            child: Image.asset('images/pages/single.png',fit: BoxFit.fill,width: 30,),
+            onTap: () {},
+            child: Image.asset(
+              'images/pages/single.png',
+              fit: BoxFit.fill,
+              width: 30,
+            ),
           ),
-           InkWell(
-            onTap: (){},
-            child: Image.asset('images/pages/previous.png',fit: BoxFit.fill,width: 30),
+          InkWell(
+            onTap: () {
+              setState(() {
+                first = false;
+              });
+            },
+            child: Image.asset('images/pages/previous.png',
+                fit: BoxFit.fill, width: 30),
           ),
-           InkWell(
-            onTap: (){},
-            child: Image.asset('images/pages/play.png'),
-          ),
-           InkWell(
-            onTap: (){},
-            child: Image.asset('images/pages/next.png',fit: BoxFit.fill,width: 30),
-          ),
-           InkWell(
-            onTap: (){},
-            child: Image.asset('images/pages/list.png',fit: BoxFit.fill,width: 30),
-          ),
+          InkWell(
+            onTap: () {
+              setState(() {
+                isPlay = !isPlay;
+              });
+              if (isPlay == true && first == false) {
+                audioPlayer.play(songURL);
+                controllerNeedle.forward();
+                controllerRecord.forward();
+                setState(() {
+                  first = true;
+                });
+              }
 
+              if (isPlay) {
+                // 继续播放
+                audioPlayer.resume();
+                controllerRecord.forward();
+                controllerNeedle.forward();
+              } else {
+                // 暂停
+                audioPlayer.pause();
+                controllerRecord.stop(canceled: false);
+                controllerNeedle.reverse();
+              }
+            },
+            child: isPlay
+                ? Image.asset('images/pages/play.png')
+                : Image.asset('images/pages/pause.png'),
+          ),
+          InkWell(
+            onTap: () {
+              setState(() {
+                first = false;
+              });
+            },
+            child: Image.asset('images/pages/next.png',
+                fit: BoxFit.fill, width: 30),
+          ),
+          InkWell(
+            onTap: () {},
+            child: Image.asset('images/pages/list.png',
+                fit: BoxFit.fill, width: 30),
+          ),
         ],
       ),
     );
