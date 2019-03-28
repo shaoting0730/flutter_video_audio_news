@@ -10,7 +10,6 @@ import 'dart:ui'; //引入ui库，因为ImageFilter Widget在这个里边。
 import './animas/needle_anim.dart'; //  唱针
 import './animas/record_anim.dart'; // 圆盘
 import 'dart:convert';
-import 'dart:math';
 
 class AudioPage extends StatefulWidget {
   @override
@@ -20,7 +19,8 @@ class AudioPage extends StatefulWidget {
 class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
   AudioPlayer audioPlayer = new AudioPlayer();
   List songsResults = []; // 歌曲list数据数组
-  AudioPlayModel songModel;
+  AudioPlayModel songModel;  // 当前歌曲信息model
+  AudioListmodel listmodel;  // 所有歌曲model
   String picPremium =
       'https://ww1.sinaimg.cn/large/0073sXn7ly1fze9706gdzj30ae0kqmyw'; // 背景图片, 先给一张图片,省的报警告
   double _value = 0; // 进度条初始值
@@ -95,8 +95,8 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
   void _getVideoData() async {
     await get('audioList').then((val) {
       var data = json.decode(val.toString());
-      AudioListmodel model = AudioListmodel.fromJson(data); // 赋值model
-      songsResults.addAll(model.songList);
+      listmodel = AudioListmodel.fromJson(data); // 赋值model
+      songsResults.addAll(listmodel.songList);
       // 默认加载第一首
       _play(0);
     });
@@ -117,7 +117,7 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
         songURL = songModel.bitrate.fileLink;
         songName = songModel.songinfo.title + '--' + songModel.songinfo.author;
       });
-      if (index >= 1) {
+      if (index >= 1 && isPlay == true) {
         audioPlayer.play(songURL);
       }
     });
@@ -363,6 +363,14 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
               setState(() {
                 first = false;
               });
+               // 如果第一首,就播放第后一首
+              if(index == 0){
+                 index = listmodel.songList.length - 1;  
+                 _play(index);   
+              }else{
+                index -=1;
+                _play(index);
+              }
             },
             child: Image.asset('images/pages/previous.png',
                 fit: BoxFit.fill, width: 30),
@@ -402,6 +410,14 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
               setState(() {
                 first = false;
               });
+              // 如果最后一首,就返回播放第一首
+              if(index == listmodel.songList.length - 1){
+                 index = 0;  
+                 _play(index);   
+              }else{
+                index +=1;
+                _play(index);
+              }
             },
             child: Image.asset('images/pages/next.png',
                 fit: BoxFit.fill, width: 30),
@@ -415,4 +431,8 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
       ),
     );
   }
+
+
+  
+
 }
