@@ -10,6 +10,7 @@ import 'dart:ui'; //引入ui库，因为ImageFilter Widget在这个里边。
 import './animas/needle_anim.dart'; //  唱针
 import './animas/record_anim.dart'; // 圆盘
 import 'dart:convert';
+import 'dart:math';
 
 class AudioPage extends StatefulWidget {
   @override
@@ -63,7 +64,8 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
 
     // 播放完成
     audioPlayer.onPlayerCompletion.listen((event) {
-      _play(index + 1);
+      index+=1;
+      _play(index);
     });
 
     // 时间变化
@@ -107,7 +109,10 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
     await get('audioInfo', formData: formdata).then((val) {
       var data = json.decode(val.toString());
       songModel = AudioPlayModel.fromJson(data);
+      num fileDuration =   songModel.bitrate.fileDuration;
+      String endDuration =   _formatTime(fileDuration);
       setState(() {
+        endTime = endDuration;
         picPremium = songModel.songinfo.picPremium;
         songURL = songModel.bitrate.fileLink;
         songName = songModel.songinfo.title + '--' + songModel.songinfo.author;
@@ -117,6 +122,16 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
       }
     });
   }
+
+    //把秒数转换为时间类型
+    _formatTime(num time) {
+        // 71s -> 01:11
+        num min = (time / 60).floor();
+        num second = time - min * 60;
+        min = min >= 10 ? min : 0 + min;
+        second = second >= 10 ? second : 0 + second;
+        return min.toString() + ':' + second.toString();
+    }
 
   @override
   Widget build(BuildContext context) {
@@ -132,9 +147,8 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
               ConstrainedBox(
                   //约束盒子组件，添加额外的限制条件到 child上。
                   constraints: const BoxConstraints.expand(), //限制条件，可扩展的。
-                  child: FadeInImage.assetNetwork(
-                    placeholder: 'images/pages/LaunchImage.jpeg',
-                    image: picPremium,
+                  child: Image.network(
+                    picPremium,
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height,
                     fit: BoxFit.cover,
@@ -325,7 +339,7 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
             },
           ),
         ),
-        Text('00:00', style: TextStyle(color: Colors.white)),
+        Text(endTime, style: TextStyle(color: Colors.white)),
       ],
     ));
   }
