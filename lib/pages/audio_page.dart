@@ -16,7 +16,7 @@ class AudioPage extends StatefulWidget {
   _AudioPageState createState() => _AudioPageState();
 }
 
-class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
+class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin,AutomaticKeepAliveClientMixin {
   AudioPlayer audioPlayer = new AudioPlayer();
   List songsResults = []; // 歌曲list数据数组
   AudioPlayModel songModel;  // 当前歌曲信息model
@@ -39,6 +39,9 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin {
   final _rotateTween = new Tween<double>(begin: -0.15, end: 0.0);
   final _commonTween = new Tween<double>(begin: 0.0, end: 1.0);
 
+  @override
+  bool get wantKeepAlive => true;  
+  
   @override
   void initState() {
     super.initState();

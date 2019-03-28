@@ -39,7 +39,7 @@ class MainVideo extends StatefulWidget {
   _MainVideoState createState() => _MainVideoState();
 }
 
-class _MainVideoState extends State<MainVideo> {
+class _MainVideoState extends State<MainVideo> with AutomaticKeepAliveClientMixin {
   GlobalKey<EasyRefreshState> _easyRefreshKey =
       new GlobalKey<EasyRefreshState>();
   GlobalKey<RefreshHeaderState> _headerKey =
@@ -64,6 +64,9 @@ class _MainVideoState extends State<MainVideo> {
       });
     });
   }
+
+   @override
+  bool get wantKeepAlive => true;  
 
   @override
   Widget build(BuildContext context) {

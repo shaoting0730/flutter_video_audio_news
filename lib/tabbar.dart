@@ -23,7 +23,7 @@ class MainPageWidget extends StatefulWidget {
 }
 
 class MainPageState extends State<MainPageWidget> {
-  int _tabIndex = 0;
+  int _tabIndex = 0;  // 当前页面
   var tabImages;
   var appBarTitles = ['视频', '音频'];
   /*
@@ -91,7 +91,10 @@ class MainPageState extends State<MainPageWidget> {
     //初始化数据
     initData();
     return Scaffold(
-      body: _pageList[_tabIndex],
+      body: IndexedStack(
+        index: _tabIndex,
+        children: _pageList,
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(
