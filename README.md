@@ -55,7 +55,6 @@
 ![image](https://github.com/pheromone/flutter_video_audio_news/blob/master/%E4%BE%A7%E8%BE%B9%E6%A0%8F.png) <br/>
 [ios模拟器加载不出视频,只能使用真机测.....]( https://github.com/flutter/flutter/issues/14647 )  <br/>
 ![image](https://github.com/pheromone/flutter_video_audio_news/blob/master/video_info.png) <br/>
-![image](https://github.com/pheromone/flutter_video_audio_news/blob/master/video_info.png) <br/>
 ![image](https://github.com/pheromone/flutter_video_audio_news/blob/master/video_comment.png) <br/>
 
 
