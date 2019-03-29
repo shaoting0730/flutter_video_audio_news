@@ -61,8 +61,8 @@
 
 
 ### 音频
-![image](https://github.com/pheromone/flutter_video_audio_news/blob/master/audio.gif) <br/>
-<img src="https://github.com/pheromone/flutter_video_audio_news/blob/master/audio.gif" width = "100" height = "100" div align=right />
+
+<img src="https://github.com/pheromone/flutter_video_audio_news/blob/master/audio.gif" width = "400" height = "600" div align=left />
 
 
 ...
