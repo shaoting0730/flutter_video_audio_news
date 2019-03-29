@@ -10,17 +10,19 @@ import 'dart:ui'; //引入ui库，因为ImageFilter Widget在这个里边。
 import './animas/needle_anim.dart'; //  唱针
 import './animas/record_anim.dart'; // 圆盘
 import 'dart:convert';
+import 'dart:math';
 
 class AudioPage extends StatefulWidget {
   @override
   _AudioPageState createState() => _AudioPageState();
 }
 
-class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin,AutomaticKeepAliveClientMixin {
+class _AudioPageState extends State<AudioPage>
+    with TickerProviderStateMixin, AutomaticKeepAliveClientMixin {
   AudioPlayer audioPlayer = new AudioPlayer();
   List songsResults = []; // 歌曲list数据数组
-  AudioPlayModel songModel;  // 当前歌曲信息model
-  AudioListmodel listmodel;  // 所有歌曲model
+  AudioPlayModel songModel; // 当前歌曲信息model
+  AudioListmodel listmodel; // 所有歌曲model
   String picPremium =
       'https://ww1.sinaimg.cn/large/0073sXn7ly1fze9706gdzj30ae0kqmyw'; // 背景图片, 先给一张图片,省的报警告
   double _value = 0; // 进度条初始值
@@ -31,6 +33,7 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin,Aut
   String songName = ''; //歌曲名
   String startTime = '00:00'; // 开始时间
   String endTime = '00:00'; // 结束时间
+  int playModel = 0; // 播放模式: 0 列表 1单曲  2  随机
 
   AnimationController controllerRecord;
   Animation<double> animationRecord;
@@ -40,8 +43,8 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin,Aut
   final _commonTween = new Tween<double>(begin: 0.0, end: 1.0);
 
   @override
-  bool get wantKeepAlive => true;  
-  
+  bool get wantKeepAlive => true;
+
   @override
   void initState() {
     super.initState();
@@ -67,7 +70,7 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin,Aut
 
     // 播放完成
     audioPlayer.onPlayerCompletion.listen((event) {
-      index+=1;
+      index += 1;
       _play(index);
     });
 
@@ -112,8 +115,8 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin,Aut
     await get('audioInfo', formData: formdata).then((val) {
       var data = json.decode(val.toString());
       songModel = AudioPlayModel.fromJson(data);
-      num fileDuration =   songModel.bitrate.fileDuration;
-      String endDuration =   _formatTime(fileDuration);
+      num fileDuration = songModel.bitrate.fileDuration;
+      String endDuration = _formatTime(fileDuration);
       setState(() {
         endTime = endDuration;
         picPremium = songModel.songinfo.picPremium;
@@ -126,15 +129,15 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin,Aut
     });
   }
 
-    //把秒数转换为时间类型
-    _formatTime(num time) {
-        // 71s -> 01:11
-        num min = (time / 60).floor();
-        num second = time - min * 60;
-        min = min >= 10 ? min : 0 + min;
-        second = second >= 10 ? second : 0 + second;
-        return min.toString() + ':' + second.toString();
-    }
+  //把秒数转换为时间类型
+  _formatTime(num time) {
+    // 71s -> 01:11
+    num min = (time / 60).floor();
+    num second = time - min * 60;
+    min = min >= 10 ? min : 0 + min;
+    second = second >= 10 ? second : 0 + second;
+    return min.toString() + ':' + second.toString();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -349,14 +352,29 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin,Aut
 
 // 控制按钮
   Widget _controBtnsWidget() {
+    var playBtn = playModel == 0
+        ? 'images/pages/circulation.png'
+        : playModel == 1
+            ? 'images/pages/single.png'
+            : 'images/pages/random.png';
     return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           InkWell(
-            onTap: () {},
+            onTap: () {
+              if (playModel == 2) {
+                this.setState(() {
+                  playModel = 0;
+                });
+              } else {
+                this.setState(() {
+                  playModel += 1;
+                });
+              }
+            },
             child: Image.asset(
-              'images/pages/single.png',
+              playBtn,
               fit: BoxFit.fill,
               width: 30,
             ),
@@ -366,13 +384,19 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin,Aut
               setState(() {
                 first = false;
               });
-               // 如果第一首,就播放第后一首
-              if(index == 0){
-                 index = listmodel.songList.length - 1;  
-                 _play(index);   
-              }else{
-                index -=1;
-                _play(index);
+              if (playModel == 2) {
+                _circulationPlay();
+              } else if (playModel == 1) {
+                _singlePlay();
+              } else {
+                // 如果第一首,就播放第后一首
+                if (index == 0) {
+                  index = listmodel.songList.length - 1;
+                  _play(index);
+                } else {
+                  index -= 1;
+                  _play(index);
+                }
               }
             },
             child: Image.asset('images/pages/previous.png',
@@ -413,13 +437,19 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin,Aut
               setState(() {
                 first = false;
               });
-              // 如果最后一首,就返回播放第一首
-              if(index == listmodel.songList.length - 1){
-                 index = 0;  
-                 _play(index);   
-              }else{
-                index +=1;
-                _play(index);
+              if (playModel == 2) {
+                _circulationPlay();
+              } else if (playModel == 1) {
+                _singlePlay();
+              } else {
+                // 如果最后一首,就返回播放第一首
+                if (index == listmodel.songList.length - 1) {
+                  index = 0;
+                  _play(index);
+                } else {
+                  index += 1;
+                  _play(index);
+                }
               }
             },
             child: Image.asset('images/pages/next.png',
@@ -435,7 +465,15 @@ class _AudioPageState extends State<AudioPage> with TickerProviderStateMixin,Aut
     );
   }
 
+  // 随机播放
+  _circulationPlay() {
+    var random = Random();
+    index = random.nextInt(listmodel.songList.length);
+    _play(index);
+  }
 
-  
-
+  // 单曲循环
+  _singlePlay() {
+    _play(index);
+  }
 }
