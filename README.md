@@ -59,12 +59,9 @@
 ![image](https://github.com/pheromone/flutter_video_audio_news/blob/master/video_comment.png) <br/>
 
 
-
 ### 音频
-
-<img src="https://github.com/pheromone/flutter_video_audio_news/blob/master/audio.gif" width = "400" height = "600" div align=left /> <br/>
-
-
+<img src="https://github.com/pheromone/flutter_video_audio_news/blob/master/audio.gif" width = "400" height = "600" div align=left /> 
+<br/>
 ... <br/>
 ### 新闻
 ...
