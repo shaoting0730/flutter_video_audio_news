@@ -26,6 +26,7 @@ class _AudioPageState extends State<AudioPage>
   String picPremium =
       'https://ww1.sinaimg.cn/large/0073sXn7ly1fze9706gdzj30ae0kqmyw'; // 背景图片, 先给一张图片,省的报警告
   double _value = 0; // 进度条初始值
+  double  fileDuration = 1; // 歌曲时长
   int index = 0; // 默认加载第一首
   String songURL = ''; // 当前播放url
   bool isPlay = false; // 播放状态 默认未播放
@@ -77,9 +78,20 @@ class _AudioPageState extends State<AudioPage>
     // 时间变化
     audioPlayer.onAudioPositionChanged.listen((Duration p) {
       // print('Current position: $p');
+      String time = p.toString();
+      String newTime =  time.substring(2,7);
+      // 计算当前几秒
+      double currenTime = p.inSeconds.toDouble(); 
+      // print('当前时间 == ${currenTime}');
+      // print('总时间 == ${fileDuration}');
+      // print(currenTime/fileDuration);
+      setState(() {
+        startTime = newTime;
+        _value = currenTime/fileDuration;
+      });
     });
 
-    // 播放状态改变
+    // 播放状态改变R
     audioPlayer.onPlayerStateChanged.listen((AudioPlayerState s) {
       print('Current player state: $s');
     });
@@ -115,9 +127,10 @@ class _AudioPageState extends State<AudioPage>
     await get('audioInfo', formData: formdata).then((val) {
       var data = json.decode(val.toString());
       songModel = AudioPlayModel.fromJson(data);
-      num fileDuration = songModel.bitrate.fileDuration;
-      String endDuration = _formatTime(fileDuration);
+      num songDuration = songModel.bitrate.fileDuration;
+      String endDuration = _formatTime(songDuration);
       setState(() {
+        fileDuration = songDuration.toDouble();
         endTime = endDuration;
         picPremium = songModel.songinfo.picPremium;
         songURL = songModel.bitrate.fileLink;
@@ -322,12 +335,14 @@ class _AudioPageState extends State<AudioPage>
     return Container(
         child: Row(
       children: <Widget>[
-        Text('00:00', style: TextStyle(color: Colors.white)),
+        Text(startTime, style: TextStyle(color: Colors.white)),
         Expanded(
           child: Slider(
             activeColor: Colors.white,
             inactiveColor: Colors.grey,
             value: _value,
+            min: 0,
+            max: 1,
             onChanged: (newValue) {
               print('onChanged:$newValue');
               setState(() {
