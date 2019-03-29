@@ -27,6 +27,7 @@ class _AudioPageState extends State<AudioPage>
       'https://ww1.sinaimg.cn/large/0073sXn7ly1fze9706gdzj30ae0kqmyw'; // 背景图片, 先给一张图片,省的报警告
   double _value = 0; // 进度条初始值
   double  fileDuration = 1; // 歌曲时长
+  double currenTime = 0;  //当前几秒
   int index = 0; // 默认加载第一首
   String songURL = ''; // 当前播放url
   bool isPlay = false; // 播放状态 默认未播放
@@ -86,6 +87,7 @@ class _AudioPageState extends State<AudioPage>
       // print('总时间 == ${fileDuration}');
       // print(currenTime/fileDuration);
       setState(() {
+        currenTime = currenTime;
         startTime = newTime;
         _value = currenTime/fileDuration;
       });
@@ -348,6 +350,9 @@ class _AudioPageState extends State<AudioPage>
               setState(() {
                 _value = newValue;
               });
+              // 进度 -> 秒数
+              int sec = (newValue  * fileDuration ).toInt(); 
+              audioPlayer.seek(new Duration(seconds: sec));
             },
             onChangeStart: (startValue) {
               print('onChangeStart:$startValue');
