@@ -61,7 +61,6 @@
 
 ### 音频
 <img src="https://github.com/pheromone/flutter_video_audio_news/blob/master/audio.gif" width = "400" height = "600"   /> 
-<br/>
 ...  <br/>
 ###  新闻
 ...
