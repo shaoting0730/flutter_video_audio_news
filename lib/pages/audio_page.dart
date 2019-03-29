@@ -26,9 +26,9 @@ class _AudioPageState extends State<AudioPage>
   String picPremium =
       'https://ww1.sinaimg.cn/large/0073sXn7ly1fze9706gdzj30ae0kqmyw'; // 背景图片, 先给一张图片,省的报警告
   double _value = 0; // 进度条初始值
-  double  fileDuration = 1; // 歌曲时长
-  double currenTime = 0;  //当前几秒
-  int index = 0; // 默认加载第一首
+  double fileDuration = 1; // 歌曲时长
+  double currenTime = 0; //当前几秒
+  int currentIndex = 0; // 当前第几首,默认加载第一首
   String songURL = ''; // 当前播放url
   bool isPlay = false; // 播放状态 默认未播放
   bool first = false; // 是否是首次点击播放按钮
@@ -72,24 +72,24 @@ class _AudioPageState extends State<AudioPage>
 
     // 播放完成
     audioPlayer.onPlayerCompletion.listen((event) {
-      index += 1;
-      _play(index);
+      currentIndex += 1;
+      _play(currentIndex);
     });
 
     // 时间变化
     audioPlayer.onAudioPositionChanged.listen((Duration p) {
       // print('Current position: $p');
       String time = p.toString();
-      String newTime =  time.substring(2,7);
+      String newTime = time.substring(2, 7);
       // 计算当前几秒
-      double currenTime = p.inSeconds.toDouble(); 
+      double currenTime = p.inSeconds.toDouble();
       // print('当前时间 == ${currenTime}');
       // print('总时间 == ${fileDuration}');
       // print(currenTime/fileDuration);
       setState(() {
         currenTime = currenTime;
         startTime = newTime;
-        _value = currenTime/fileDuration;
+        _value = currenTime / fileDuration;
       });
     });
 
@@ -152,6 +152,18 @@ class _AudioPageState extends State<AudioPage>
     min = min >= 10 ? min : 0 + min;
     second = second >= 10 ? second : 0 + second;
     return min.toString() + ':' + second.toString();
+  }
+
+  // 随机播放
+  _circulationPlay() {
+    var random = Random();
+    currentIndex = random.nextInt(listmodel.songList.length);
+    _play(currentIndex);
+  }
+
+  // 单曲循环
+  _singlePlay() {
+    _play(currentIndex);
   }
 
   @override
@@ -224,7 +236,7 @@ class _AudioPageState extends State<AudioPage>
     );
   }
 
-  // 歌曲名
+  // ��曲名
   Widget _nameWidget() {
     return Container(
       child: Text(songName, textAlign: TextAlign.center),
@@ -351,7 +363,7 @@ class _AudioPageState extends State<AudioPage>
                 _value = newValue;
               });
               // 进度 -> 秒数
-              int sec = (newValue  * fileDuration ).toInt(); 
+              int sec = (newValue * fileDuration).toInt();
               audioPlayer.seek(new Duration(seconds: sec));
             },
             onChangeStart: (startValue) {
@@ -410,12 +422,12 @@ class _AudioPageState extends State<AudioPage>
                 _singlePlay();
               } else {
                 // 如果第一首,就播放第后一首
-                if (index == 0) {
-                  index = listmodel.songList.length - 1;
-                  _play(index);
+                if (currentIndex == 0) {
+                  currentIndex = listmodel.songList.length - 1;
+                  _play(currentIndex);
                 } else {
-                  index -= 1;
-                  _play(index);
+                  currentIndex -= 1;
+                  _play(currentIndex);
                 }
               }
             },
@@ -463,12 +475,12 @@ class _AudioPageState extends State<AudioPage>
                 _singlePlay();
               } else {
                 // 如果最后一首,就返回播放第一首
-                if (index == listmodel.songList.length - 1) {
-                  index = 0;
-                  _play(index);
+                if (currentIndex == listmodel.songList.length - 1) {
+                  currentIndex = 0;
+                  _play(currentIndex);
                 } else {
-                  index += 1;
-                  _play(index);
+                  currentIndex += 1;
+                  _play(currentIndex);
                 }
               }
             },
@@ -476,7 +488,16 @@ class _AudioPageState extends State<AudioPage>
                 fit: BoxFit.fill, width: 30),
           ),
           InkWell(
-            onTap: () {},
+            onTap: () {
+              showModalBottomSheet(
+                context: context,
+                builder: (BuildContext context) {
+                  return _songsListWidget();
+                },
+              ).then((val) {
+                print(val);
+              });
+            },
             child: Image.asset('images/pages/list.png',
                 fit: BoxFit.fill, width: 30),
           ),
@@ -485,15 +506,35 @@ class _AudioPageState extends State<AudioPage>
     );
   }
 
-  // 随机播放
-  _circulationPlay() {
-    var random = Random();
-    index = random.nextInt(listmodel.songList.length);
-    _play(index);
-  }
-
-  // 单曲循环
-  _singlePlay() {
-    _play(index);
+  // 侧边栏
+  Widget _songsListWidget() {
+    return Container(
+      height: 500,
+        child: ListView.builder(
+          itemCount: listmodel.songList.length,
+          itemBuilder: (context, index) {
+            return InkWell(
+              onTap: (){
+                 currentIndex = index; // 当前第几首
+                 isPlay = true;   // 播放状态置为播放
+                 _play(index);  // 播放
+                controllerNeedle.forward();  //  唱针动画
+                controllerRecord.forward();   //  唱盘动画
+                 Navigator.of(context).pop();  // 返回
+              },
+              child: ListTile(
+                title: Text(
+                  listmodel.songList[index].title,
+                  style: TextStyle(color: index == currentIndex ? Colors.red : Colors.black),
+                  ),
+                leading: Icon(
+                  Icons.playlist_play,
+                  color: index == currentIndex ? Colors.red : Colors.black,
+                  ),
+              ),
+            );
+          },
+        ),
+    );
   }
 }
