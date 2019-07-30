@@ -12,7 +12,7 @@
 ### 使用三方库
  [网络请求库: dio]( https://github.com/flutterchina/dio )  <br/>
  [UI尺寸适配库: flutter_screenutil]( https://github.com/OpenFlutter/flutter_screenutil )  <br/>
- [打电话: url_launcher]( https://github.com/flutter/plugins )  <br/>
+ [ 打电话 ]( https://github.com/flutter/plugins/tree/master/packages/url_launcher ) <br/>
  [下拉刷新&上拉加载: flutter_easyrefresh]( https://github.com/xuelongqy/flutter_easyrefresh )  <br/>
  [瀑布流: flutter_staggered_grid_view]( https://github.com/letsar/flutter_staggered_grid_view )  <br/>
  [视频播放: chewie]( https://github.com/brianegan/chewie )  <br/>
